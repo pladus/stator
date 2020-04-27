@@ -6,9 +6,14 @@ Close development scope for v1.1:
 1. async/await handlers support;
 2. bounded transition for few entityes at once;
 3. pipline of multiple handlers for each stage of transition;
+4. factory for creating destination state;
+
 
 Known issues:
-1. State transition is not atomar operation. There are no any rollback in case of exception when callbacks are executing.
+1. State transition is not atomar operation. There are no any rollback in case of exception when callbacks are executing;
+2. Initial state cant be a null;
+3. State can't be a class.
+
 
 Getting started:
 
