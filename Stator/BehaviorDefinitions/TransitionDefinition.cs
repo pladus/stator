@@ -54,7 +54,7 @@ namespace Stator.BehaviorDefinitions
 
         private bool CanPerformTransition(TEntity entity, IEvent<TEntity> @event)
         {
-            if (entity == null || @event?.Item == null || _transitionConditionPredicate == null)
+            if (_transitionConditionPredicate == null)
                 return true;
 
             return _transitionConditionPredicate(entity, @event);

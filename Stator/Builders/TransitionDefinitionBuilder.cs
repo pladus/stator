@@ -18,11 +18,19 @@ namespace Stator.Builders
             _eventDefinitionBuilder = eventDefinitionBuilder;
         }
 
+        /// <summary>
+        /// Set a condition which must be succesfully checked before the transition will be allowed
+        /// </summary>
+        /// <param name="action">Predicate</param>
         public ITransitionDefinitionMatchBuilder<TEntity, TEntityState> Match(Func<TEntity, IEvent<TEntity>, bool>  action)
         {
             _transitionDefinition.RegisterTransitionConditionPredicate(action);
             return this;
         }
+        /// <summary>
+        /// Set a delegate which will be invoked in case of condition mismatch
+        /// </summary>
+        /// <param name="handler">Delegate to invoke</param>
         public ITransitionDefinitionBuilder<TEntity, TEntityState> Or(Action<TEntity, IEvent<TEntity>> handler)
         {
             _transitionDefinition.RegisterTransitionConditionFailedHandler(handler);

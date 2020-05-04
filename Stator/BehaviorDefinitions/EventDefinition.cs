@@ -10,9 +10,10 @@ namespace Stator.BehaviorDefinitions
 {
     internal class EventDefinition<TEntity, TEntityState> where TEntity : class
     {
-
         private ConcurrentDictionary<TEntityState, TransitionDefinition<TEntity, TEntityState>> _transitionDefinitionMap 
             = new ConcurrentDictionary<TEntityState, TransitionDefinition<TEntity, TEntityState>>();
+
+        private TransitionDefinition<TEntity, TEntityState> _initTransition;
 
         private Action<TEntity, IEvent<TEntity>> _transitionMissHandler;
         private Action<TEntity, TEntityState> _transitionAction;
@@ -25,25 +26,42 @@ namespace Stator.BehaviorDefinitions
 
         public void AddTransition(TEntityState originalState, TEntityState destinationState)
         {
-            _transitionDefinitionMap[originalState] = new TransitionDefinition<TEntity, TEntityState>
+            var definition = new TransitionDefinition<TEntity, TEntityState>
                 (
                 _transitionAction,
                 originalState,
                 destinationState
                 );
+
+            if (originalState == null)
+                _initTransition = definition;
+            else
+                _transitionDefinitionMap[originalState] = definition;
         }
 
         internal TransitionDefinition<TEntity, TEntityState> GetTransitionDefinition(TEntityState originalState)
         {
-            if (!_transitionDefinitionMap.TryGetValue(originalState, out var definition))
+            TransitionDefinition<TEntity, TEntityState> transitionDefinition;
+            if (originalState == null && _initTransition != null)
+            {
+                transitionDefinition = _initTransition;
+            }
+            else if ((originalState == null && _initTransition == null)
+                || !_transitionDefinitionMap.TryGetValue(originalState, out transitionDefinition))
                 throw new ArgumentOutOfRangeException($"Definition for {originalState} not found. Please try to register it.");
             
-            return definition;
+            return transitionDefinition;
         }
 
         public TransitionResult<TEntity> PerformTransit(TEntity entity, TEntityState originalState, IEvent<TEntity> @event)
         {
-            if(!_transitionDefinitionMap.TryGetValue(originalState, out var transitionDefinition))
+            TransitionDefinition<TEntity, TEntityState> transitionDefinition;
+            if (originalState == null && _initTransition != null)
+            {
+                transitionDefinition = _initTransition;
+            }
+            else if((originalState == null && _initTransition == null) 
+                || !_transitionDefinitionMap.TryGetValue(originalState, out transitionDefinition))
             {
                 _transitionMissHandler?.Invoke(entity, @event);
                 return new TransitionResult<TEntity>(entity, false, FailureTypes.TransitionNotRegistered);

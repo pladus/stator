@@ -6,9 +6,10 @@ namespace StatorTests.TestData.Enums
 {
     public enum UserStatus
     {
-        Active = 1, 
+        Active = 1,
         Inactive = 2,
-        Premium = 3,
-        Deleted = 4
+        Striked = 3,
+        Premium = 4,
+        Deleted = 5
     }
 }

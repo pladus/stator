@@ -7,6 +7,6 @@ namespace Stator.Interfaces
     public interface IEvent<TEntity> where TEntity: class
     {
         TEntity Item { get; }
-        object Args { get; }
+        object[] Args { get; }
     }
 }

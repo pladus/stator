@@ -10,6 +10,6 @@ namespace StatorTests.TestData.Models.Events
     {
         public User Item => null;
 
-        public object Args => Array.Empty<object>();
+        public object[] Args => Array.Empty<object>();
     }
 }

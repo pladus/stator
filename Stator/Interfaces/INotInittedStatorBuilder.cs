@@ -7,6 +7,6 @@ namespace Stator.Interfaces
 {
     public interface INotInittedStatorBuilder<TEntity, TEntityState> where TEntity : class
     {
-        IStatorBuilder<TEntity, TEntityState> Status(Expression<Func<TEntity, TEntityState>> statusPropertySelector);
+        IStatorBuilder<TEntity, TEntityState> State(Expression<Func<TEntity, TEntityState>> statusPropertySelector);
     }
 }

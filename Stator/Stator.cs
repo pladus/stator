@@ -71,12 +71,12 @@ namespace Stator
 
         private Action<TEntity, TEntityState> GetFuncForSetStatus(PropertyInfo property)
         {
-            var methodInfo = property.GetType().GetMethod("SetValue", new Type[] { typeof(System.Object), typeof(object) });
+            var methodInfo = property.GetSetMethod();
             var paramEntityExpression = Expression.Parameter(typeof(TEntity), "entity");
             var paramNewStateExpression = Expression.Parameter(typeof(TEntityState), "newState");
-            var boxedNewStateExpression = Expression.Convert(paramNewStateExpression, typeof(object));
-            var constantObject = Expression.Constant(property);
-            var setExpression = Expression.Call(constantObject, methodInfo, new Expression[] { paramEntityExpression, boxedNewStateExpression });
+            //var boxedNewStateExpression = Expression.Convert(paramNewStateExpression, typeof(object));
+            //var constantObject = Expression.Constant(property);
+            var setExpression = Expression.Call(paramEntityExpression, methodInfo, new Expression[] { paramNewStateExpression });
 
             var resultLambda = Expression.Lambda(setExpression, new ParameterExpression[] { paramEntityExpression, paramNewStateExpression });
 

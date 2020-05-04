@@ -9,7 +9,6 @@ namespace StatorTests.TestData.Models.Events
     public class UserStarredEvent : IEvent<User>
     {
         public User Item => null;
-
-        public object Args => Array.Empty<object>();
+        public object[] Args => Array.Empty<object>();
     }
 }
