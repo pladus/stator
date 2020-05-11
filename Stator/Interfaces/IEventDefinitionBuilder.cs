@@ -11,7 +11,7 @@ namespace Stator.Interfaces
         /// Set delegate that will be invoked in case of allowed transitions mismatch
         /// </summary>
         /// <param name="handler">Delegate to invoke</param>
-        IEventDefinitionBuilder<TEntity, TEntityState> WithTransitionMissHandler(Action<TEntity, IEvent<TEntity>> handler);
+        IEventDefinitionBuilder<TEntity, TEntityState> WithTransitionMissHandler(Action<TEntity, IEvent> handler);
         /// <summary>
         /// Register allowed state transition associated with Event
         /// </summary>

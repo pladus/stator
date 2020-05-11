@@ -26,7 +26,7 @@ namespace Stator.Builders
         /// <summary>
         /// <inheritdoc/>
         /// </summary>
-        public IEventDefinitionBuilder<TEntity, TEntityState> ForEvent<TEvent>() where TEvent : IEvent<TEntity>
+        public IEventDefinitionBuilder<TEntity, TEntityState> ForEvent<TEvent>() where TEvent : IEvent
         => new EventDefinitionBuilder<TEntity, TEntityState>(_stator.GetEventDefinition<TEvent>(), this);
         /// <summary>
         /// <inheritdoc/>

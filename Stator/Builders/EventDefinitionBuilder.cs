@@ -1,8 +1,6 @@
 ﻿using Stator.BehaviorDefinitions;
 using Stator.Interfaces;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Stator.Builders
 {
@@ -21,7 +19,7 @@ namespace Stator.Builders
         /// Set delegate that will be invoked in case of allowed transitions mismatch
         /// </summary>
         /// <param name="handler">Delegate to invoke</param>
-        public IEventDefinitionBuilder<TEntity, TEntityState> WithTransitionMissHandler(Action<TEntity, IEvent<TEntity>> handler)
+        public IEventDefinitionBuilder<TEntity, TEntityState> WithTransitionMissHandler(Action<TEntity, IEvent> handler)
         {
             _eventDefinition.RegisterTransitionMissHandler(handler);
             return this;

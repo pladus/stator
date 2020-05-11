@@ -15,10 +15,10 @@ namespace Stator.BehaviorDefinitions
 
         private TransitionDefinition<TEntity, TEntityState> _initTransition;
 
-        private Action<TEntity, IEvent<TEntity>> _transitionMissHandler;
+        private Action<TEntity, IEvent> _transitionMissHandler;
         private Action<TEntity, TEntityState> _transitionAction;
 
-        public EventDefinition(Action<TEntity, TEntityState> transitionAction, Action<TEntity,IEvent<TEntity>> transitionMissHandler = null)
+        public EventDefinition(Action<TEntity, TEntityState> transitionAction, Action<TEntity,IEvent> transitionMissHandler = null)
         {
             _transitionMissHandler = transitionMissHandler;
             _transitionAction = transitionAction;
@@ -53,7 +53,7 @@ namespace Stator.BehaviorDefinitions
             return transitionDefinition;
         }
 
-        public TransitionResult<TEntity> PerformTransit(TEntity entity, TEntityState originalState, IEvent<TEntity> @event)
+        public TransitionResult<TEntity> PerformTransit(TEntity entity, TEntityState originalState, IEvent @event)
         {
             TransitionDefinition<TEntity, TEntityState> transitionDefinition;
             if (originalState == null && _initTransition != null)
@@ -71,7 +71,7 @@ namespace Stator.BehaviorDefinitions
             return new TransitionResult<TEntity>(entity);
         }
 
-        public void RegisterTransitionMissHandler(Action<TEntity, IEvent<TEntity>> handler)
+        public void RegisterTransitionMissHandler(Action<TEntity, IEvent> handler)
         {
             if (handler == null)
                 throw new ArgumentNullException(nameof(handler), "Handler can't be null.");
@@ -79,30 +79,30 @@ namespace Stator.BehaviorDefinitions
             _transitionMissHandler = handler;
         }
 
-        public void TransitionMissHandle(TEntity entity, IEvent<TEntity> @event)
+        public void TransitionMissHandle(TEntity entity, IEvent @event)
         {
             _transitionMissHandler?.Invoke(entity, @event);
         }
 
-        public void RegisterTransitionConditionPredicate(TEntityState originalState, Func<TEntity, IEvent<TEntity>, bool> predicate)
+        public void RegisterTransitionConditionPredicate(TEntityState originalState, Func<TEntity, IEvent, bool> predicate)
         {
             var transitionDefinition = GetTransitionDefinition(originalState);
             transitionDefinition.RegisterTransitionConditionPredicate(predicate);
         }
 
-        public void RegisterBeforeTransitionAction(TEntityState originalState, Action<TEntity, IEvent<TEntity>> action)
+        public void RegisterBeforeTransitionAction(TEntityState originalState, Action<TEntity, IEvent> action)
         {
             var transitionDefinition = GetTransitionDefinition(originalState);
             transitionDefinition.RegisterBeforeTransitionAction(action);
         }
 
-        public void RegisterAfterTransitionAction(TEntityState originalState, Action<TEntity, IEvent<TEntity>> action)
+        public void RegisterAfterTransitionAction(TEntityState originalState, Action<TEntity, IEvent> action)
         {
             var transitionDefinition = GetTransitionDefinition(originalState);
             transitionDefinition.RegisterAfterTransitionAction(action);
         }
 
-        public void RegisterTransitionConditionFailedHandler(TEntityState originalState, Action<TEntity, IEvent<TEntity>> handler)
+        public void RegisterTransitionConditionFailedHandler(TEntityState originalState, Action<TEntity, IEvent> handler)
         {
             var transitionDefinition = GetTransitionDefinition(originalState);
             transitionDefinition.RegisterTransitionConditionFailedHandler(handler);

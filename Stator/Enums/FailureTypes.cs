@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Stator.Enums
+﻿namespace Stator.Enums
 {
     /// <summary>
     /// Describes a type of ocurred error while handling

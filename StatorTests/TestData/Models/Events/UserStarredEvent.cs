@@ -6,9 +6,8 @@ using System.Text;
 
 namespace StatorTests.TestData.Models.Events
 {
-    public class UserStarredEvent : IEvent<User>
+    public class UserStarredEvent : IEvent
     {
-        public User Item => null;
         public object[] Args => Array.Empty<object>();
     }
 }

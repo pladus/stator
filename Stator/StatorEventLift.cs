@@ -10,15 +10,15 @@ namespace Stator
     public class StatorEventLift<TEntity, TEntityState> : IStatorEventLift<TEntity> where TEntity : class
     {
         private readonly Stator<TEntity, TEntityState> _stator;
-        private readonly IEvent<TEntity> _event;
+        private readonly IEvent _event;
 
-        internal StatorEventLift(Stator<TEntity, TEntityState> stator, IEvent<TEntity> @event)
+        internal StatorEventLift(Stator<TEntity, TEntityState> stator, IEvent @event)
         {
             _stator = stator;
             _event = @event;
         }
 
-        public IEvent<TEntity> Event { get => _event; }
+        public IEvent Event { get => _event; }
         /// <summary>
         /// <inheritdoc/>
         /// </summary>

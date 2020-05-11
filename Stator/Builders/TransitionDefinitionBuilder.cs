@@ -1,8 +1,6 @@
 ﻿using Stator.BehaviorDefinitions;
 using Stator.Interfaces;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Stator.Builders
 {
@@ -20,7 +18,7 @@ namespace Stator.Builders
         /// <summary>
         /// <inheritdoc/>
         /// </summary>
-        public ITransitionDefinitionMatchBuilder<TEntity, TEntityState> Match(Func<TEntity, IEvent<TEntity>, bool> action)
+        public ITransitionDefinitionMatchBuilder<TEntity, TEntityState> Match(Func<TEntity, IEvent, bool> action)
         {
             _transitionDefinition.RegisterTransitionConditionPredicate(action);
             return this;
@@ -28,7 +26,7 @@ namespace Stator.Builders
         /// <summary>
         /// <inheritdoc/>
         /// </summary>
-        public ITransitionDefinitionBuilder<TEntity, TEntityState> Or(Action<TEntity, IEvent<TEntity>> handler)
+        public ITransitionDefinitionBuilder<TEntity, TEntityState> Or(Action<TEntity, IEvent> handler)
         {
             _transitionDefinition.RegisterTransitionConditionFailedHandler(handler);
             return this;
@@ -36,7 +34,7 @@ namespace Stator.Builders
         /// <summary>
         /// <inheritdoc/>
         /// </summary>
-        public ITransitionDefinitionBuilder<TEntity, TEntityState> WithActionBeforeTransition(Action<TEntity, IEvent<TEntity>> action)
+        public ITransitionDefinitionBuilder<TEntity, TEntityState> WithActionBeforeTransition(Action<TEntity, IEvent> action)
         {
             _transitionDefinition.RegisterBeforeTransitionAction(action);
             return this;
@@ -44,7 +42,7 @@ namespace Stator.Builders
         /// <summary>
         /// <inheritdoc/>
         /// </summary>
-        public ITransitionDefinitionBuilder<TEntity, TEntityState> WithActionAfterTransition(Action<TEntity, IEvent<TEntity>> action)
+        public ITransitionDefinitionBuilder<TEntity, TEntityState> WithActionAfterTransition(Action<TEntity, IEvent> action)
         {
             _transitionDefinition.RegisterAfterTransitionAction(action);
             return this;

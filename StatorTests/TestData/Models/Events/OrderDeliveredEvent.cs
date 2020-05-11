@@ -6,9 +6,8 @@ using System.Text;
 
 namespace StatorTests.TestData.Models.Events
 {
-    class OrderDeliveredEvent : IEvent<Order>
+    class OrderDeliveredEvent : IEvent
     {
-        public Order Item => null;
         public object[] Args => Array.Empty<object>();
     }
 }

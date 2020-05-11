@@ -3,9 +3,7 @@ using Stator.Interfaces;
 using StatorTests.TestData.Enums;
 using StatorTests.TestData.Models.Entities;
 using StatorTests.TestData.Models.Events;
-using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using Xunit;
 
 namespace StatorTests
@@ -51,7 +49,7 @@ namespace StatorTests
 
         [Theory]
         [MemberData(nameof(Should_allow_valid_transition_data_source))]
-        public void Should_allow_valid_transition(IEvent<User> @event, UserStatus statusFrom, UserStatus statusTo)
+        public void Should_allow_valid_transition(IEvent @event, UserStatus statusFrom, UserStatus statusTo)
         {
             var user = new User { Status = statusFrom };
             var result = _stator.Go(user, @event);
@@ -63,7 +61,7 @@ namespace StatorTests
 
         [Theory]
         [MemberData(nameof(Should_disallow_valid_transition_data_source))]
-        public void Should_disallow_valid_transition(IEvent<User> @event, UserStatus status)
+        public void Should_disallow_valid_transition(IEvent @event, UserStatus status)
         {
             var user = new User { Status = status };
             var result = _stator.Go(user, @event);

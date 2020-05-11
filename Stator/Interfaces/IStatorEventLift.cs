@@ -12,7 +12,7 @@ namespace Stator.Interfaces
         /// <summary>
         /// Event settled into the lift
         /// </summary>
-        IEvent<TEntity> Event { get; }
+        IEvent Event { get; }
         /// <summary>
         /// Rise event for state transition 
         /// </summary>
