@@ -23,6 +23,10 @@ namespace Stator
         private Action<TEntity, TEntityState> _setStateAction;
         private Action<IEvent<TEntity>, TEntity> _eventNotRegisteredHandler;
 
+        /// <summary>
+        /// Starts state machine configuring
+        /// </summary>
+        /// <returns>Fluent builder</returns>
         public static INotInittedStatorBuilder<TEntity, TEntityState> InitStator()
         {
             return new StatorBuilder<TEntity, TEntityState>(new Stator<TEntity, TEntityState>());
@@ -169,7 +173,7 @@ namespace Stator
             if (!_eventDefinitionMap.ContainsKey(eventType))
             {
                 _eventNotRegisteredHandler?.Invoke(@event, entity);
-                return new TransitionResult<TEntity>(@event.Item, false, FailureTypes.EventNotRegistered);
+                return TransitionResult<TEntity>.MakeFailure(@event.Item, FailureTypes.EventNotRegistered);
             }
 
             var eventDefinition = _eventDefinitionMap[eventType];

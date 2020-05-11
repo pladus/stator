@@ -64,7 +64,7 @@ namespace Stator.BehaviorDefinitions
                 || !_transitionDefinitionMap.TryGetValue(originalState, out transitionDefinition))
             {
                 _transitionMissHandler?.Invoke(entity, @event);
-                return new TransitionResult<TEntity>(entity, false, FailureTypes.TransitionNotRegistered);
+                return TransitionResult<TEntity>.MakeFailure(entity, FailureTypes.TransitionNotRegistered);
             }
 
             transitionDefinition.PerformTransition(entity, @event);

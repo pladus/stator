@@ -42,7 +42,7 @@ namespace Stator.BehaviorDefinitions
             if (!CanPerformTransition(entity, @event))
             {
                 _transitionConditionFailedHandler?.Invoke(entity, @event);
-                return new TransitionResult<TEntity> (entity, false, FailureTypes.TransitionConditionFailed);
+                return TransitionResult<TEntity>.MakeFailure(entity, FailureTypes.TransitionConditionFailed);
             }
 
             _beforeTransitionAction?.Invoke(entity, @event);
