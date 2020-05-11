@@ -137,17 +137,17 @@ namespace Stator
             var transitions = new Action[entitiesCount];
             var failed = false;
 
-            // TODO: Need compile delegates ***
-            var resultType = typeof(TransitionResult<>).MakeGenericType();
-            var successProperty = resultType.GetProperty("Success", typeof(bool));
-            var failureTypeProperty = resultType.GetProperty("FailureType", typeof(FailureTypes));
-            // TODO: Need compile delegates ***
-
-
             for (var i = 0; i < entitiesCount; i++)
             {
                 var item = mob[i];
                 var entityType = item.GetType();
+
+                // TODO: Need compile delegates ***
+                var resultType = typeof(TransitionResult<>).MakeGenericType(entityType);
+                var successProperty = resultType.GetProperty("Success", typeof(bool));
+                var failureTypeProperty = resultType.GetProperty("FailureType", typeof(FailureTypes));
+                // TODO: Need compile delegates ***
+
                 if (results.ContainsKey(entityType))
                     throw StatorConfigurationException.MobStatorCantPropessDuplicatedEntities(entityType);
 
