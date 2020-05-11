@@ -13,7 +13,8 @@ using System.Text;
 
 namespace Stator
 {
-    public class Stator<TEntity, TEntityState> where TEntity : class
+    public class Stator<TEntity, TEntityState> : IStator<TEntity, TEntityState>
+        where TEntity : class
     {
         private PropertyInfo _statusPropertyInfo;
         private ConcurrentDictionary<Type, EventDefinition<TEntity, TEntityState>>
@@ -31,7 +32,7 @@ namespace Stator
             InitStatorWithSelector(statusPropertySelector);
         }
 
-        public Stator(Expression<Func<TEntity, TEntityState>> statusPropertySelector)
+        internal Stator(Expression<Func<TEntity, TEntityState>> statusPropertySelector)
         {
             InitStatorWithSelector(statusPropertySelector);
         }
@@ -72,10 +73,9 @@ namespace Stator
         private Action<TEntity, TEntityState> GetFuncForSetStatus(PropertyInfo property)
         {
             var methodInfo = property.GetSetMethod();
+
             var paramEntityExpression = Expression.Parameter(typeof(TEntity), "entity");
             var paramNewStateExpression = Expression.Parameter(typeof(TEntityState), "newState");
-            //var boxedNewStateExpression = Expression.Convert(paramNewStateExpression, typeof(object));
-            //var constantObject = Expression.Constant(property);
             var setExpression = Expression.Call(paramEntityExpression, methodInfo, new Expression[] { paramNewStateExpression });
 
             var resultLambda = Expression.Lambda(setExpression, new ParameterExpression[] { paramEntityExpression, paramNewStateExpression });
@@ -99,7 +99,7 @@ namespace Stator
             return null;
         }
 
-        public void RegisterTransition<TEvent>(TEntityState originalState, TEntityState destinationState) where TEvent : IEvent<TEntity>
+        internal void RegisterTransition<TEvent>(TEntityState originalState, TEntityState destinationState) where TEvent : IEvent<TEntity>
         {
             var eventType = typeof(TEvent);
 
@@ -114,42 +114,42 @@ namespace Stator
             eventDefinition.AddTransition(originalState, destinationState);
         }
 
-        public void RegisterTransitionMissHandler<TEvent>(Action<TEntity, IEvent<TEntity>> handler) where TEvent : IEvent<TEntity>
+        internal void RegisterTransitionMissHandler<TEvent>(Action<TEntity, IEvent<TEntity>> handler) where TEvent : IEvent<TEntity>
         {
             var eventType = typeof(TEvent);
             var eventDefinition = GetEventDefinition(eventType);
             eventDefinition.RegisterTransitionMissHandler(handler);
         }
 
-        public void RegisterAfterTransitionAction<TEvent>(TEntityState originalState, Action<TEntity, IEvent<TEntity>> action) where TEvent : IEvent<TEntity>
+        internal void RegisterAfterTransitionAction<TEvent>(TEntityState originalState, Action<TEntity, IEvent<TEntity>> action) where TEvent : IEvent<TEntity>
         {
             var eventType = typeof(TEvent);
             var eventDefinition = GetEventDefinition(eventType);
             eventDefinition.RegisterAfterTransitionAction(originalState, action);
         }
 
-        public void RegisterBeforeTransitionAction<TEvent>(TEntityState originalState, Action<TEntity, IEvent<TEntity>> action) where TEvent : IEvent<TEntity>
+        internal void RegisterBeforeTransitionAction<TEvent>(TEntityState originalState, Action<TEntity, IEvent<TEntity>> action) where TEvent : IEvent<TEntity>
         {
             var eventType = typeof(TEvent);
             var eventDefinition = GetEventDefinition(eventType);
             eventDefinition.RegisterBeforeTransitionAction(originalState, action);
         }
 
-        public void RegisterTransitionConditionPredicate<TEvent>(TEntityState originalState, Func<TEntity, IEvent<TEntity>, bool> predicate) where TEvent : IEvent<TEntity>
+        internal void RegisterTransitionConditionPredicate<TEvent>(TEntityState originalState, Func<TEntity, IEvent<TEntity>, bool> predicate) where TEvent : IEvent<TEntity>
         {
             var eventType = typeof(TEvent);
             var eventDefinition = GetEventDefinition(eventType);
             eventDefinition.RegisterTransitionConditionPredicate(originalState, predicate);
         }
 
-        public void RegisterTransitionConditionFailedHandler<TEvent>(TEntityState originalState, Action<TEntity, IEvent<TEntity>> handler) where TEvent : IEvent<TEntity>
+        internal void RegisterTransitionConditionFailedHandler<TEvent>(TEntityState originalState, Action<TEntity, IEvent<TEntity>> handler) where TEvent : IEvent<TEntity>
         {
             var eventType = typeof(TEvent);
             var eventDefinition = GetEventDefinition(eventType);
             eventDefinition.RegisterTransitionConditionFailedHandler(originalState, handler);
         }
 
-        private EventDefinition<TEntity, TEntityState> GetEventDefinition(Type eventType)
+        internal EventDefinition<TEntity, TEntityState> GetEventDefinition(Type eventType)
         {
             if (!_eventDefinitionMap.ContainsKey(eventType))
                 _eventDefinitionMap.TryAdd(eventType, new EventDefinition<TEntity, TEntityState>
@@ -160,8 +160,10 @@ namespace Stator
             var eventDefinition = _eventDefinitionMap[eventType];
             return eventDefinition;
         }
-
-        public TransitionResult<TEntity> CommitTransition(TEntity entity, IEvent<TEntity> @event)
+        /// <summary>
+        /// <inheritdoc/>
+        /// </summary>
+        public TransitionResult<TEntity> Go(TEntity entity, IEvent<TEntity> @event)
         {
             var eventType = @event.GetType();
             if (!_eventDefinitionMap.ContainsKey(eventType))
@@ -176,7 +178,9 @@ namespace Stator
 
             return eventDefinition.PerformTransit(entity, currentState, @event);
         }
-
+        /// <summary>
+        /// <inheritdoc/>
+        /// </summary>
         public StatorEventLift<TEntity, TEntityState> GetEventLift(IEvent<TEntity> @event)
          => new StatorEventLift<TEntity, TEntityState>(this, @event);
     }

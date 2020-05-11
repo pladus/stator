@@ -4,6 +4,9 @@ using System.Text;
 
 namespace Stator.Enums
 {
+    /// <summary>
+    /// Describes a type of ocurred error while handling
+    /// </summary>
     public enum FailureTypes
     {
         None = 0,

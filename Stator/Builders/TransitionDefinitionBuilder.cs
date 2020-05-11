@@ -17,38 +17,41 @@ namespace Stator.Builders
             _transitionDefinition = transitionDefinition;
             _eventDefinitionBuilder = eventDefinitionBuilder;
         }
-
         /// <summary>
-        /// Set a condition which must be succesfully checked before the transition will be allowed
+        /// <inheritdoc/>
         /// </summary>
-        /// <param name="action">Predicate</param>
-        public ITransitionDefinitionMatchBuilder<TEntity, TEntityState> Match(Func<TEntity, IEvent<TEntity>, bool>  action)
+        public ITransitionDefinitionMatchBuilder<TEntity, TEntityState> Match(Func<TEntity, IEvent<TEntity>, bool> action)
         {
             _transitionDefinition.RegisterTransitionConditionPredicate(action);
             return this;
         }
         /// <summary>
-        /// Set a delegate which will be invoked in case of condition mismatch
+        /// <inheritdoc/>
         /// </summary>
-        /// <param name="handler">Delegate to invoke</param>
         public ITransitionDefinitionBuilder<TEntity, TEntityState> Or(Action<TEntity, IEvent<TEntity>> handler)
         {
             _transitionDefinition.RegisterTransitionConditionFailedHandler(handler);
             return this;
         }
-
-        public ITransitionDefinitionBuilder<TEntity, TEntityState> WithActionBeforeTransition(Action<TEntity, IEvent<TEntity>>  action)
+        /// <summary>
+        /// <inheritdoc/>
+        /// </summary>
+        public ITransitionDefinitionBuilder<TEntity, TEntityState> WithActionBeforeTransition(Action<TEntity, IEvent<TEntity>> action)
         {
             _transitionDefinition.RegisterBeforeTransitionAction(action);
             return this;
         }
-
-        public ITransitionDefinitionBuilder<TEntity, TEntityState> WithActionAfterTransition(Action<TEntity, IEvent<TEntity>>  action)
+        /// <summary>
+        /// <inheritdoc/>
+        /// </summary>
+        public ITransitionDefinitionBuilder<TEntity, TEntityState> WithActionAfterTransition(Action<TEntity, IEvent<TEntity>> action)
         {
             _transitionDefinition.RegisterAfterTransitionAction(action);
             return this;
         }
-
+        /// <summary>
+        /// <inheritdoc/>
+        /// </summary>
         public IEventDefinitionBuilder<TEntity, TEntityState> ConfirmTransition()
             => _eventDefinitionBuilder;
 

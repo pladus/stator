@@ -54,7 +54,7 @@ namespace StatorTests
         public void Should_allow_valid_transition(IEvent<User> @event, UserStatus statusFrom, UserStatus statusTo)
         {
             var user = new User { Status = statusFrom };
-            var result = _stator.CommitTransition(user, @event);
+            var result = _stator.Go(user, @event);
 
             Assert.Equal(statusTo, user.Status);
             Assert.Equal(user, result.Entity);
@@ -66,7 +66,7 @@ namespace StatorTests
         public void Should_disallow_valid_transition(IEvent<User> @event, UserStatus status)
         {
             var user = new User { Status = status };
-            var result = _stator.CommitTransition(user, @event);
+            var result = _stator.Go(user, @event);
 
             Assert.Equal(status, user.Status);
             Assert.Equal(user, result.Entity);

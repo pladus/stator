@@ -45,7 +45,7 @@ namespace StatorTests
                 .Build();
 
             var lift = stator.GetEventLift(new UserDeletedEvent());
-            var result = lift.Rise(new User());
+            var result = lift.Go(new User());
 
             Assert.False(result.Success);
             Assert.Equal(FailureTypes.EventNotRegistered, result.FailureType);
@@ -62,8 +62,8 @@ namespace StatorTests
                 new User { Status = UserStatus.Inactive}
             };
 
-            var resultSingle = _statorBlockedLift.Rise(user);
-            var resultGroup = _statorBlockedLift.Rise(userArray);
+            var resultSingle = _statorBlockedLift.Go(user);
+            var resultGroup = _statorBlockedLift.Go(userArray);
 
             Assert.Equal(UserStatus.Inactive, resultSingle.Entity.Status);
             Assert.Equal(user, resultSingle.Entity);

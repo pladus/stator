@@ -7,7 +7,7 @@ using System.Text;
 
 namespace Stator
 {
-    public class StatorEventLift<TEntity, TEntityState> where TEntity : class
+    public class StatorEventLift<TEntity, TEntityState> : IStatorEventLift<TEntity> where TEntity : class
     {
         private readonly Stator<TEntity, TEntityState> _stator;
         private readonly IEvent<TEntity> _event;
@@ -19,15 +19,19 @@ namespace Stator
         }
 
         public IEvent<TEntity> Event { get => _event; }
-
-        public TransitionResult<TEntity> Rise(TEntity entity)
+        /// <summary>
+        /// <inheritdoc/>
+        /// </summary>
+        public TransitionResult<TEntity> Go(TEntity entity)
         {
-           return _stator.CommitTransition(entity, _event);
+            return _stator.Go(entity, _event);
         }
-
-        public TransitionResult<TEntity>[] Rise(IEnumerable<TEntity> entities)
+        /// <summary>
+        /// <inheritdoc/>
+        /// </summary>
+        public TransitionResult<TEntity>[] Go(IEnumerable<TEntity> entities)
         {
-            return entities.Select(x => _stator.CommitTransition(x, _event)).ToArray();
+            return entities.Select(x => _stator.Go(x, _event)).ToArray();
         }
     }
 }

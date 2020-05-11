@@ -34,7 +34,7 @@ namespace StatorTests
 
             var @event = new UserBlockedEvent();
             var user = new User { Status = UserStatus.Active };
-            var result = stator.CommitTransition(user, @event);
+            var result = stator.Go(user, @event);
 
             Assert.True(handlerBeforeTransition1Fired);
             Assert.False(handlerBeforeTransition2Fired);
@@ -59,7 +59,7 @@ namespace StatorTests
             var @event = new UserBlockedEvent();
             var user = new User { Status = UserStatus.Deleted };
             
-            var ex = Assert.Throws<Exception>(() => stator.CommitTransition(user, @event));
+            var ex = Assert.Throws<Exception>(() => stator.Go(user, @event));
             Assert.Equal(exMessage, ex.Message);
         }
         [Fact]
@@ -80,7 +80,7 @@ namespace StatorTests
             var @event = new UserBlockedEvent();
             var user = new User { Status = UserStatus.Active };
 
-            var ex = Assert.Throws<Exception>(() => stator.CommitTransition(user, @event));
+            var ex = Assert.Throws<Exception>(() => stator.Go(user, @event));
             Assert.Equal(exMessage, ex.Message);
         }
     }
