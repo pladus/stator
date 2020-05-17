@@ -34,7 +34,7 @@ namespace Stator.Builders
         }
 
         public IMobStator<TEntity1, TEntity2> Build()
-            => new MobStator<TEntity1, TEntity2>(_mobStator.Stators);
+            => new MobStator<TEntity1, TEntity2>(_mobStator);
     }
 
     public class MobStatorBuilder<TEntity1, TEntity2, TEntity3, TEntityState> : IMobStatorBuilder<TEntity1, TEntity2, TEntity3>
@@ -53,7 +53,7 @@ namespace Stator.Builders
         }
 
         public IMobStator<TEntity1, TEntity2, TEntity3> Build()
-            => new MobStator<TEntity1, TEntity2, TEntity3>(_mobStator.Stators);
+            => new MobStator<TEntity1, TEntity2, TEntity3>(_mobStator);
 
     }
 
@@ -75,7 +75,7 @@ namespace Stator.Builders
         }
 
         public IMobStator<TEntity1, TEntity2, TEntity3, TEntity4> Build()
-            => new MobStator<TEntity1, TEntity2, TEntity3, TEntity4>(_mobStator.Stators);
+            => new MobStator<TEntity1, TEntity2, TEntity3, TEntity4>(_mobStator);
     }
 
     public class MobStatorExpandedBuilder : IMobStatorExpandedBuilder
@@ -92,6 +92,6 @@ namespace Stator.Builders
         }
 
         public IMobStator Build()
-            => new MobStatorExpanded(_mobStator.Stators);
+            => new MobStatorExpanded(_mobStator);
     }
 }

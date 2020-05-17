@@ -14,6 +14,10 @@ namespace Stator.Exceptions
 
         private static readonly string _mobStatorCantPropessDuplicatedEntities = 
             "Can't apply transition: mob state machine can't applying transition for duplicated {0} entity.";
+
+        private static readonly string _mobStatorCantSetForDuplicatedEntities =
+           "Can't apply configuration: mob state machine can not be configured for duplicated {0} entity.";
+
         internal StatorConfigurationException(string message) : base(message)
         {
         }
@@ -29,6 +33,8 @@ namespace Stator.Exceptions
             => new StatorConfigurationException(string.Format(_mobEntitiesAndStateMachinesCountNotEqualsMessage, stateMachinesCount, entitiesCount));
 
         internal static Exception MobStatorCantPropessDuplicatedEntities(Type entityType)
+            => new StatorConfigurationException(string.Format(_mobStatorCantPropessDuplicatedEntities, entityType.FullName));
+        internal static Exception MobStatorCantSetForDuplicatedEntities(Type entityType)
             => new StatorConfigurationException(string.Format(_mobStatorCantPropessDuplicatedEntities, entityType.FullName));
 
     }

@@ -58,13 +58,13 @@ namespace Stator
 
             var propertyAccess = GetPropertyAccessExpression(lambda.Body);
 
-            if (propertyAccess == null)            
+            if (propertyAccess == null)
                 throw new ArgumentException("Selector of the status property must be property access expression. Example: x => x.Status", nameof(statusPropertySelector));
-            
 
-            if (propertyAccess.Member.DeclaringType == null)            
+
+            if (propertyAccess.Member.DeclaringType == null)
                 throw new ArgumentException("Selected property must have declared type.");
-            
+
 
             _getStateFunc = statusPropertySelector.Compile();
             _statusPropertyInfo = propertyAccess.Member.DeclaringType.GetProperty(propertyAccess.Member.Name);
@@ -167,7 +167,28 @@ namespace Stator
         /// <summary>
         /// <inheritdoc/>
         /// </summary>
-        public TransitionResult<TEntity> Go(TEntity entity, IEvent @event)
+        public TransitionResult<TEntity> Go(TEntity entity, IEvent @event, bool restoreOnFailure = false)
+        {
+            if (!restoreOnFailure)
+                return PerformTransition(entity, @event);
+
+            var previousState = _getStateFunc(entity);
+            try
+            {
+                return PerformTransition(entity, @event);
+            }
+            catch
+            {
+                _setStateAction(entity, previousState);
+                throw;
+            }
+        }
+        Func<TEntity, TEntityState> IStator<TEntity, TEntityState>.GetGetter()
+            => _getStateFunc;
+        Action<TEntity, TEntityState> IStator<TEntity, TEntityState>.GetSetter()
+            => _setStateAction;       
+
+        private TransitionResult<TEntity> PerformTransition(TEntity entity, IEvent @event)
         {
             var eventType = @event.GetType();
             if (!_eventDefinitionMap.ContainsKey(eventType))
@@ -182,6 +203,7 @@ namespace Stator
 
             return eventDefinition.PerformTransit(entity, currentState, @event);
         }
+
         /// <summary>
         /// <inheritdoc/>
         /// </summary>
