@@ -12,8 +12,6 @@ namespace StatorTests
 {
     public class MobStatorTransitionsTests
     {
-        private readonly Stator<User, UserStatus> _stator;
-
         public static IEnumerable<object[]> Should_allow_valid_transition_for_2_entities_data_source()
         {
             yield return new object[] { new UserBlockedEvent(), UserStatus.Active, UserStatus.Inactive, SubscriptionStatus.Active, SubscriptionStatus.Closed };

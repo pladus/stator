@@ -21,13 +21,23 @@ namespace Stator.Interfaces
         IMobStator<TEntity1, TEntity2> Build();
     }
 
+
     public interface IMobStatorBuilder<TEntity1, TEntity2, TEntity3>
         where TEntity1 : class
         where TEntity2 : class
         where TEntity3 : class
     {
+        /// <summary>
+        /// Attach new linked state machine for coordinated transition
+        /// </summary>
+        /// <param name="stator">Additional Stator state machine</param>
+        /// <returns></returns>
         IMobStatorBuilder<TEntity1, TEntity2, TEntity3, TEntity4> AddStateMachine<TEntity4, TEntityState>(Stator<TEntity4, TEntityState> stator) where TEntity4 : class;
-        IMobStator<TEntity1, TEntity2, TEntity3> Build();
+     /// <summary>
+     /// Return complited state machine
+     /// </summary>
+     /// <returns></returns>
+     IMobStator<TEntity1, TEntity2, TEntity3> Build();
     }
 
     public interface IMobStatorBuilder<TEntity1, TEntity2, TEntity3, TEntity4>
