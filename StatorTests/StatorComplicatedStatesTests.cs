@@ -30,7 +30,7 @@ namespace StatorTests
             var order = new Order {  State = new State { RawMode= "Created" } };
             var @event = new OrderCreatedEvent();
 
-            var result = _stator.CommitTransition(order, @event);
+            var result = _stator.Go(order, @event);
             Assert.True(result.Success);
             Assert.Equal("Delivered", result.Entity.State.RawMode);
         }

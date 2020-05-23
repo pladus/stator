@@ -15,26 +15,21 @@ namespace Stator.Builders
         {
             _stator = stator;
         }
-
         /// <summary>
-        /// Select a State property for controlling by Stator
+        /// <inheritdoc/>
         /// </summary>
-        /// <param name="statusPropertySelector">Property selector</param>
         public IStatorBuilder<TEntity, TEntityState> State(Expression<Func<TEntity, TEntityState>> statusPropertySelector)
         {
             _stator.SelectStatusProperty(statusPropertySelector);
             return this;
         }
-
         /// <summary>
-        /// Register Event which can triggered state transitions
+        /// <inheritdoc/>
         /// </summary>
-        /// <typeparam name="TEvent">Event type. Must implement Stator.IEvent<T>.</typeparam>
-        public IEventDefinitionBuilder<TEntity, TEntityState> ForEvent<TEvent>() where TEvent : IEvent<TEntity>
+        public IEventDefinitionBuilder<TEntity, TEntityState> ForEvent<TEvent>() where TEvent : IEvent
         => new EventDefinitionBuilder<TEntity, TEntityState>(_stator.GetEventDefinition<TEvent>(), this);
-        
         /// <summary>
-        /// Finish stator configuring
+        /// <inheritdoc/>
         /// </summary>
         public Stator<TEntity, TEntityState> Build()
         {

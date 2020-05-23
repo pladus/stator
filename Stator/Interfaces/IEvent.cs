@@ -4,9 +4,14 @@ using System.Text;
 
 namespace Stator.Interfaces
 {
-    public interface IEvent<TEntity> where TEntity: class
+    /// <summary>
+    /// Event which can trigger a state transition
+    /// </summary>
+    public interface IEvent
     {
-        TEntity Item { get; }
+        /// <summary>
+        /// Event args. It reachable from every handler or condition check
+        /// </summary>
         object[] Args { get; }
     }
 }

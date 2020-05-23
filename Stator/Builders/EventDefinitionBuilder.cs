@@ -1,8 +1,6 @@
 ﻿using Stator.BehaviorDefinitions;
 using Stator.Interfaces;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Stator.Builders
 {
@@ -17,29 +15,25 @@ namespace Stator.Builders
             _eventDefinition = eventDefinition;
             _statorBuilder = statorBuilder;
         }
-
         /// <summary>
         /// Set delegate that will be invoked in case of allowed transitions mismatch
         /// </summary>
         /// <param name="handler">Delegate to invoke</param>
-        public IEventDefinitionBuilder<TEntity, TEntityState> WithTransitionMissHandler(Action<TEntity, IEvent<TEntity>> handler)
+        public IEventDefinitionBuilder<TEntity, TEntityState> WithTransitionMissHandler(Action<TEntity, IEvent> handler)
         {
             _eventDefinition.RegisterTransitionMissHandler(handler);
             return this;
         }
         /// <summary>
-        /// Register allowed state transition associated with Event
+        /// <inheritdoc/>
         /// </summary>
-        /// <param name="originalState">From this state</param>
-        /// <param name="destinationState">To this state</param>
         public ITransitionDefinitionBuilder<TEntity, TEntityState> SetTransition(TEntityState originalState, TEntityState destinationState)
         {
             _eventDefinition.AddTransition(originalState, destinationState);
             return new TransitionDefinitionBuilder<TEntity, TEntityState>(_eventDefinition.GetTransitionDefinition(originalState), this);
         }
-
         /// <summary>
-        /// Finish event configuring
+        /// <inheritdoc/>
         /// </summary>
         public IStatorBuilder<TEntity, TEntityState> ConfirmEvent()
             => _statorBuilder;
