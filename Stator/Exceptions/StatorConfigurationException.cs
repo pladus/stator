@@ -6,13 +6,13 @@ namespace Stator.Exceptions
 {
     public class StatorConfigurationException : Exception
     {
-        private static readonly string _mobEntityStateMachineNotRegisteredMessage = 
+        private static readonly string _mobEntityStateMachineNotRegisteredMessage =
             "Can't apply transition: state machine for Entity{0} not registered.";
 
-        private static readonly string _mobEntitiesAndStateMachinesCountNotEqualsMessage = 
+        private static readonly string _mobEntitiesAndStateMachinesCountNotEqualsMessage =
             "Can't apply transition for {1} Entities with MobStator configured of {0} referenced state machines.";
 
-        private static readonly string _mobStatorCantPropessDuplicatedEntities = 
+        private static readonly string _mobStatorCantPropessDuplicatedEntities =
             "Can't apply transition: mob state machine can't applying transition for duplicated {0} entity.";
 
         private static readonly string _mobStatorCantSetForDuplicatedEntities =
@@ -36,6 +36,5 @@ namespace Stator.Exceptions
             => new StatorConfigurationException(string.Format(_mobStatorCantPropessDuplicatedEntities, entityType.FullName));
         internal static Exception MobStatorCantSetForDuplicatedEntities(Type entityType)
             => new StatorConfigurationException(string.Format(_mobStatorCantPropessDuplicatedEntities, entityType.FullName));
-
     }
 }

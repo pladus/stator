@@ -10,7 +10,7 @@ namespace Stator.BehaviorDefinitions
 {
     internal class EventDefinition<TEntity, TEntityState> where TEntity : class
     {
-        private ConcurrentDictionary<TEntityState, TransitionDefinition<TEntity, TEntityState>> _transitionDefinitionMap 
+        private ConcurrentDictionary<TEntityState, TransitionDefinition<TEntity, TEntityState>> _transitionDefinitionMap
             = new ConcurrentDictionary<TEntityState, TransitionDefinition<TEntity, TEntityState>>();
 
         private TransitionDefinition<TEntity, TEntityState> _initTransition;
@@ -18,7 +18,7 @@ namespace Stator.BehaviorDefinitions
         private Action<TEntity, IEvent> _transitionMissHandler;
         private Action<TEntity, TEntityState> _transitionAction;
 
-        public EventDefinition(Action<TEntity, TEntityState> transitionAction, Action<TEntity,IEvent> transitionMissHandler = null)
+        public EventDefinition(Action<TEntity, TEntityState> transitionAction, Action<TEntity, IEvent> transitionMissHandler = null)
         {
             _transitionMissHandler = transitionMissHandler;
             _transitionAction = transitionAction;
@@ -49,7 +49,7 @@ namespace Stator.BehaviorDefinitions
             else if ((originalState == null && _initTransition == null)
                 || !_transitionDefinitionMap.TryGetValue(originalState, out transitionDefinition))
                 throw new ArgumentOutOfRangeException($"Definition for {originalState} not found. Please try to register it.");
-            
+
             return transitionDefinition;
         }
 
@@ -60,7 +60,7 @@ namespace Stator.BehaviorDefinitions
             {
                 transitionDefinition = _initTransition;
             }
-            else if((originalState == null && _initTransition == null) 
+            else if ((originalState == null && _initTransition == null)
                 || !_transitionDefinitionMap.TryGetValue(originalState, out transitionDefinition))
             {
                 _transitionMissHandler?.Invoke(entity, @event);

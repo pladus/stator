@@ -32,17 +32,12 @@ namespace Stator
 
             try
             {
-                var results = transitionActions.Select(x => x?.Invoke()).ToArray();
+                return ProcessResult(transitionActions.Select(x => x?.Invoke()).ToArray());
 
-                if (results.All(x => x.Item2))
-                    return new MobTransitionResult();
-
-                var resultsToReturn = results.ToDictionary(x => x.Item1, x => x.Item3);
-                return MobTransitionResult.MakeFailure(resultsToReturn);
             }
             catch
             {
-                if(_withRollbackOnFailure)
+                if (_withRollbackOnFailure)
                     rollbackActions.ForEach(x => x?.Invoke());
                 throw;
             }
@@ -68,13 +63,8 @@ namespace Stator
 
             try
             {
-                var results = transitionActions.Select(x => x?.Invoke());
+                return ProcessResult(transitionActions.Select(x => x?.Invoke()).ToArray());
 
-                if (results.All(x => x.Item2))
-                    return new MobTransitionResult();
-
-                var resultsToReturn = results.ToDictionary(x => x.Item1, x => x.Item3);
-                return MobTransitionResult.MakeFailure(resultsToReturn);
             }
             catch
             {
@@ -95,6 +85,7 @@ namespace Stator
         {
             if (Stators.Count != 4)
                 throw StatorConfigurationException.MobEntitiesAndStateMachinesCountNotEquals(4, Stators.Count);
+
             var rollbackActions = new List<Action>();
             var transitionActions = new List<Func<Tuple<Type, bool, FailureTypes>>>();
 
@@ -103,16 +94,10 @@ namespace Stator
             PrepareDelegates(mob.Item3, @event, rollbackActions, transitionActions);
             PrepareDelegates(mob.Item4, @event, rollbackActions, transitionActions);
 
-
             try
             {
-                var results = transitionActions.Select(x => x?.Invoke()).ToArray();
+                return ProcessResult(transitionActions.Select(x => x?.Invoke()).ToArray());
 
-                if (results.All(x => x.Item2))
-                    return new MobTransitionResult();
-
-                var resultsToReturn = results.ToDictionary(x => x.Item1, x => x.Item3);
-                return MobTransitionResult.MakeFailure(resultsToReturn);
             }
             catch
             {
@@ -146,13 +131,8 @@ namespace Stator
 
             try
             {
-                var results = transitionActions.Select(x => x?.Invoke()).ToArray();
+                return ProcessResult(transitionActions.Select(x => x?.Invoke()).ToArray());
 
-                if (results.All(x => x.Item2))
-                    return new MobTransitionResult();
-
-                var resultsToReturn = results.ToDictionary(x => x.Item1, x => x.Item3);
-                return MobTransitionResult.MakeFailure(resultsToReturn);
             }
             catch
             {
@@ -167,14 +147,14 @@ namespace Stator
             var count = mobEntity.Length;
             _typePreparersMap = new Dictionary<Type, Action<object, IEvent, List<Action>, List<Func<Tuple<Type, bool, FailureTypes>>>>>();
             var touchedEntities = new Type[count];
-            
-            for (var i = 0; i< count; i++)
+
+            for (var i = 0; i < count; i++)
             {
                 var entity = mobEntity[i];
                 var entityType = entity.GetType();
                 if (Array.IndexOf(touchedEntities, entityType) >= 0)
                     throw StatorConfigurationException.MobStatorCantPropessDuplicatedEntities(entityType);
-               
+
                 touchedEntities[i] = entityType;
 
                 var constThis = Expression.Constant(this);
@@ -183,7 +163,7 @@ namespace Stator
                 var rollbackActionsParam = Expression.Parameter(typeof(List<Action>), "rollbackActions");
                 var transitionInvokersParam = Expression.Parameter(typeof(List<Func<Tuple<Type, bool, FailureTypes>>>), "transitionInvokers");
 
-                
+
                 var callExp = Expression.Call(constThis, nameof(PrepareDelegates), new Type[] { entityType }, new Expression[] { entityParam, eventParam, rollbackActionsParam, transitionInvokersParam });
 
                 var lambda = Expression.Lambda(callExp, new[] { inEntityParam, eventParam, rollbackActionsParam, transitionInvokersParam });

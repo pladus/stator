@@ -54,5 +54,20 @@ namespace Stator
                 return Tuple.Create(type, result.Success, result.FailureType);
             });
         }
+
+        protected MobTransitionResult ProcessResult(Tuple<Type, bool, FailureTypes>[] transitionResults)
+        {
+            var cap = transitionResults.Length;
+            var toSuccessTypes = new List<Type>(cap);
+            var failuresMap = new Dictionary<Type, FailureTypes>(cap);
+            foreach (var (type, result, failureType) in transitionResults)
+            {
+                if (result) toSuccessTypes.Add(type);
+                else failuresMap[type] = failureType;
+            }
+            if (toSuccessTypes.Count > 0) return new MobTransitionResult(toSuccessTypes.ToArray());
+
+            return MobTransitionResult.MakeFailure(failuresMap);
+        }
     }
 }
